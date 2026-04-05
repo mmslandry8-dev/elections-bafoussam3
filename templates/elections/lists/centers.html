@@ -1,0 +1,44 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-6">
+
+    <h1 class="text-3xl font-bold mb-6">
+        🏫 Centres de vote - Bafoussam III
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {% for center in centers %}
+        <div class="bg-white shadow-lg rounded-xl p-5">
+
+            <h2 class="text-xl font-bold">
+                {{ center.name }}
+            </h2>
+
+            <p class="text-gray-600">
+                📍 {{ center.locality }}
+            </p>
+
+            <p class="text-sm text-gray-500">
+                {{ center.address }}
+            </p>
+
+            <div class="mt-4 bg-gray-100 p-3 rounded">
+                🗳️ Bureaux : {{ center.polling_stations.count }}
+            </div>
+
+            <a href="#"
+               class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">
+                Voir détails
+            </a>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

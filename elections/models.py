@@ -57,3 +57,37 @@ class ElectoralList(models.Model):
 
     def __str__(self):
         return self.name
+    
+class VotingCenter(models.Model):
+    """
+    Centre de vote = école ou lieu regroupant plusieurs bureaux
+    """
+
+    name = models.CharField(max_length=255)
+    locality = models.CharField(max_length=255)  # quartier / village
+
+    address = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class PollingStation(models.Model):
+    """
+    Bureau de vote = unité de base du scrutin
+    """
+
+    center = models.ForeignKey(
+        VotingCenter,
+        on_delete=models.CASCADE,
+        related_name="polling_stations"
+    )
+
+    code = models.CharField(max_length=50)  # BV1, BV2...
+    registered_voters = models.PositiveIntegerField()
+
+    # 📍 option géographique (future carte)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.code} - {self.center.name}"
