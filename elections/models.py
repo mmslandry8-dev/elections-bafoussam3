@@ -30,3 +30,30 @@ class ElectoralList(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.party.acronym})"
+
+class ElectoralList(models.Model):
+    """
+    Représente une liste électorale (parti + candidats).
+    Cette entité est utilisée pour :
+    - affichage public
+    - calcul des résultats
+    - saisie des voix
+    """
+
+    name = models.CharField(max_length=255)  # Nom du parti ou liste
+    party_acronym = models.CharField(max_length=50, blank=True, null=True)
+
+    # 🎨 VISUELS
+    logo = models.ImageField(upload_to='lists/images/', null=True, blank=True)
+    banner = models.ImageField(upload_to='lists/images/', null=True, blank=True)
+
+    # 📄 DOCUMENT OFFICIEL (PDF des candidats)
+    program_document = models.FileField(upload_to='lists/docs/', null=True, blank=True)
+
+    # 🧠 STATUT
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
