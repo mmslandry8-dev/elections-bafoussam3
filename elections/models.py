@@ -91,3 +91,49 @@ class PollingStation(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.center.name}"
+
+class BureauResult(models.Model):
+    polling_station = models.OneToOneField(PollingStation, on_delete=models.CASCADE)
+
+    total_voters = models.IntegerField(default=0)
+    blank_votes = models.IntegerField(default=0)
+    valid_votes = models.IntegerField(default=0)
+
+    def participation_rate(self):
+        if self.polling_station.registered_voters == 0:
+            return 0
+        return (self.total_voters / self.polling_station.registered_voters) * 100
+    
+class VoteSession(models.Model):
+    """
+    Représente la saisie des résultats d'un bureau de vote
+    """
+
+    polling_station = models.ForeignKey("PollingStation", on_delete=models.CASCADE)
+
+    total_voters = models.IntegerField()
+    blank_votes = models.IntegerField(default=0)
+
+    is_validated = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def total_list_votes(self):
+        return sum(entry.votes for entry in self.entries.all())
+    
+class VoteEntry(models.Model):
+    """
+    Résultat d'une liste dans un bureau de vote
+    """
+
+    session = models.ForeignKey(
+        VoteSession,
+        on_delete=models.CASCADE,
+        related_name="entries"
+    )
+
+    electoral_list = models.ForeignKey("ElectoralList", on_delete=models.CASCADE)
+    votes = models.IntegerField()
+
+
+
+

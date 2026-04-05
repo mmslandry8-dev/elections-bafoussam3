@@ -1,0 +1,43 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-6">
+
+    <h1 class="text-2xl font-bold mb-4">
+        🗳️ Saisie des résultats - Agent électoral
+    </h1>
+
+    {% if error %}
+        <div class="bg-red-500 text-white p-3 rounded mb-4">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <h2 class="text-xl font-bold mt-6 mb-2">
+            Résultats par liste
+        </h2>
+
+        {% for list in lists %}
+            <div class="mb-3">
+                <label>{{ list.name }}</label>
+                <input type="number"
+                       name="list_{{ list.id }}"
+                       class="border p-2 w-full">
+            </div>
+        {% endfor %}
+
+        <button class="bg-green-600 text-white px-4 py-2 rounded mt-4">
+            Valider les résultats
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
