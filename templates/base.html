@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Élections Municipales</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Animation -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #007A3D, #CE1126);
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="flex justify-between items-center p-4 bg-black/30 backdrop-blur-md shadow-lg">
+        <h1 class="text-xl font-bold">🗳️ Bafoussam III Elections</h1>
+        <div>
+            <a href="#" class="mx-2 hover:text-yellow-300">Accueil</a>
+            <a href="#" class="mx-2 hover:text-yellow-300">Résultats</a>
+            <a href="#" class="mx-2 hover:text-yellow-300">Connexion</a>
+        </div>
+    </nav>
+
+    <!-- CONTENU -->
+    <div class="p-8">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
