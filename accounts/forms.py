@@ -1,0 +1,20 @@
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import User, Appeal
+
+class RegisterForm(UserCreationForm):
+    """
+    Formulaire d'inscription
+    """
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+
+class AppealForm(forms.ModelForm):
+    """
+    Formulaire de demande de réactivation
+    """
+    class Meta:
+        model = Appeal
+        fields = ['message']
