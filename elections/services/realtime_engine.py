@@ -11,3 +11,16 @@ class RealTimeEngine:
             "bv": session.polling_station.code,
             "validated": session.is_validated
         }
+
+
+class LiveUpdateService:
+    """
+    Simule mise à jour temps réel
+    """
+
+    @staticmethod
+    def refresh():
+        return {
+            "results": "updated",
+            "timestamp": "now"
+        }

@@ -1,0 +1,45 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-6">
+
+    <h1 class="text-3xl font-bold mb-4">
+        📊 Résultats provisoires - Bafoussam III
+    </h1>
+
+    <p class="text-red-600 mb-6">
+        ⚠️ Résultats provisoires sous réserve de proclamation officielle par ELECAM
+    </p>
+
+    <!-- PARTICIPATION -->
+    <div class="bg-blue-100 p-4 rounded mb-6">
+        🗳️ Taux de participation : 
+        <strong>{{ participation }}%</strong>
+    </div>
+
+    <!-- GRAPH SIMPLE (BARRES HTML) -->
+    <h2 class="text-xl font-bold mb-3">🏆 Classement des listes</h2>
+
+    {% for name, score in results %}
+
+        <div class="mb-3">
+
+            <div class="flex justify-between">
+                <span>{{ name }}</span>
+                <span>{{ score }} voix</span>
+            </div>
+
+            <div class="w-full bg-gray-200 h-4 rounded">
+                <div class="bg-green-500 h-4 rounded"
+                     style="width: {{ score }}%;">
+                </div>
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
