@@ -1,0 +1,24 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto p-6">
+
+    <h1 class="text-3xl font-bold mb-6">
+        🏛️ Répartition des sièges
+    </h1>
+
+    <div class="bg-white shadow rounded p-4">
+
+        {% for party, seat in seats %}
+            <div class="flex justify-between border-b py-2">
+                <span>{{ party }}</span>
+                <span class="font-bold">{{ seat }} sièges</span>
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

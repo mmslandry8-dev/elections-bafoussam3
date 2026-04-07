@@ -12,3 +12,8 @@ urlpatterns = [
 
 ]
 
+from .views.public_views import seats_results
+
+urlpatterns += [
+    path("seats/", seats_results, name="seats_results"),
+]
