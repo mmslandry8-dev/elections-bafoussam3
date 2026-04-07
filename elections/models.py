@@ -1,6 +1,8 @@
 from django.db import models
 from core.models import Commune
 
+from django.conf import settings
+
 # Create your models here.
 
 class PoliticalParty(models.Model):
@@ -91,6 +93,8 @@ class PollingStation(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.center.name}"
+    
+    is_locked = models.BooleanField(default=False)  # 👈 NOUVEAU
 
 class BureauResult(models.Model):
     polling_station = models.OneToOneField(PollingStation, on_delete=models.CASCADE)
@@ -134,6 +138,18 @@ class VoteEntry(models.Model):
     electoral_list = models.ForeignKey("ElectoralList", on_delete=models.CASCADE)
     votes = models.IntegerField()
 
+class AuditLog(models.Model):
+    """
+    Journal de toutes les actions sensibles
+    """
 
+    action = models.CharField(max_length=255)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.action} - {self.created_at}"
 
 
