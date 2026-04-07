@@ -2,34 +2,39 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Élections Municipales</title>
+    <title>Résultats Électoraux</title>
 
-    <!-- Tailwind CDN -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Animation -->
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+
     <style>
         body {
-            background: linear-gradient(135deg, #007A3D, #CE1126);
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
         }
     </style>
 </head>
-<body class="text-white min-h-screen">
+
+<body>
 
     <!-- NAVBAR -->
-    <nav class="flex justify-between items-center p-4 bg-black/30 backdrop-blur-md shadow-lg">
-        <h1 class="text-xl font-bold">🗳️ Bafoussam III Elections</h1>
+    <nav class="bg-slate-900 p-4 shadow-lg flex justify-between">
+        <h1 class="text-xl font-bold">🗳️ Elections Bafoussam III</h1>
+
         <div>
-            <a href="#" class="mx-2 hover:text-yellow-300">Accueil</a>
-            <a href="#" class="mx-2 hover:text-yellow-300">Résultats</a>
-            <a href="#" class="mx-2 hover:text-yellow-300">Connexion</a>
+            <a href="/" class="mr-4 hover:text-green-400">Dashboard</a>
+            <a href="/centers/" class="mr-4 hover:text-green-400">Centres</a>
+            <a href="/agent/vote/" class="hover:text-green-400">Saisie</a>
         </div>
     </nav>
 
     <!-- CONTENU -->
-    <div class="p-8">
-        {% block content %}
-        {% endblock %}
+    <div class="p-6">
+        {% block content %}{% endblock %}
     </div>
 
 </body>

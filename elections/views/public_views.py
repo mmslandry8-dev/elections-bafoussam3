@@ -6,7 +6,19 @@ from elections.services.seat_allocation import SeatAllocator
 
 def dashboard(request):
 
+    # results = ResultsEngine.get_global_results()
     results = ResultsEngine.get_global_results()
+
+    total_votes = sum(results.values())
+
+    processed_results = []
+
+    for name, score in results.items():
+        percentage = (score / total_votes) * 100 if total_votes > 0 else 0
+        processed_results.append((name, score, round(percentage, 2)))
+
+    # tri
+    processed_results = sorted(processed_results, key=lambda x: x[1], reverse=True)
     participation = StatsService.participation_rate()
 
     # classement
