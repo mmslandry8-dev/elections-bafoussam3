@@ -1,0 +1,56 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl font-bold mb-6">
+    ⚖️ Administration électorale
+</h1>
+
+<div class="bg-slate-800 p-4 rounded shadow">
+
+<table class="w-full">
+
+<thead class="bg-slate-700">
+<tr>
+    <th class="p-2">BV</th>
+    <th>Votants</th>
+    <th>Statut</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for session in sessions %}
+<tr class="border-b border-gray-600">
+
+    <td class="p-2">{{ session.polling_station.code }}</td>
+    <td>{{ session.total_voters }}</td>
+
+    <td>
+        {% if session.is_validated %}
+            <span class="text-green-400">✔ Validé</span>
+        {% else %}
+            <span class="text-yellow-400">⏳ En attente</span>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if not session.is_validated %}
+        <a href="{% url 'validate_session' session.id %}"
+           class="bg-green-500 px-3 py-1 rounded">
+            Valider
+        </a>
+        {% endif %}
+    </td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

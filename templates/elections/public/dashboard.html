@@ -31,6 +31,16 @@
 
 </div>
 
+{% empty %}
+
+<div class="bg-yellow-500 p-4 rounded">
+    Aucun résultat disponible pour le moment.
+</div>
+
+{% endfor %}
+
+{% for name, score, percentage in results %}
+    <span>#{{ forloop.counter }}</span>
 {% endfor %}
 
 {% endblock %}

@@ -2,22 +2,18 @@
 
 {% block content %}
 
-<div class="container mx-auto p-6">
+<h1 class="text-3xl font-bold mb-6">
+    🏛️ Répartition des sièges
+</h1>
 
-    <h1 class="text-3xl font-bold mb-6">
-        🏛️ Répartition des sièges
-    </h1>
+<div class="bg-slate-800 p-4 rounded shadow">
 
-    <div class="bg-white shadow rounded p-4">
-
-        {% for party, seat in seats %}
-            <div class="flex justify-between border-b py-2">
-                <span>{{ party }}</span>
-                <span class="font-bold">{{ seat }} sièges</span>
-            </div>
-        {% endfor %}
-
+{% for party, seats in seats %}
+    <div class="flex justify-between border-b border-gray-600 py-2">
+        <span>{{ party }}</span>
+        <span class="font-bold text-green-400">{{ seats }} sièges</span>
     </div>
+{% endfor %}
 
 </div>
 

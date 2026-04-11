@@ -17,9 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('', include('dashboard.urls')),
+#     path('accounts/', include('accounts.urls')),
+#     path('results/', include('results.urls')),
+#     path('elections/', include('elections.urls')),
+# ]
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('dashboard.urls')),
+
+    # 👉 le système électoral devient la racine
+    path('', include('elections.urls')),
+
     path('accounts/', include('accounts.urls')),
     path('results/', include('results.urls')),
+    path('dashboard/', include('dashboard.urls')),  # déplacé ici
 ]

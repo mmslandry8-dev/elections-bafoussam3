@@ -1,15 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'elections/base.html' %}
 
 {% block content %}
-<h2 class="text-2xl mb-4">Connexion</h2>
 
-<form method="post">
+<div class="flex justify-center items-center h-screen">
+
+<div class="bg-slate-800 p-8 rounded shadow w-full max-w-md">
+
+    <h2 class="text-xl font-bold mb-4">
+        ⚠️ Compte suspendu
+    </h2>
+
+    <p class="mb-4 text-sm">
+        Votre compte est suspendu. Faites une demande de réactivation.
+    </p>
+
+    <form method="POST">
     {% csrf_token %}
-    <input type="text" name="username" placeholder="Username" class="block mb-2 text-black">
-    <input type="password" name="password" placeholder="Password" class="block mb-2 text-black">
 
-    <button class="bg-yellow-400 text-black px-4 py-2 rounded">
-        Se connecter
+    <input type="text" name="username"
+           placeholder="Votre nom d'utilisateur"
+           class="w-full p-2 mb-3 rounded text-black">
+
+    {{ form.message }}
+
+    <button class="w-full bg-yellow-500 p-2 rounded mt-4">
+        Envoyer demande
     </button>
-</form>
+    </form>
+
+<a href="{% url 'login' %}" class="block mt-4 text-center text-green-400">
+    ← Retour à la connexion
+</a>
+
+</div>
+
+</div>
+
 {% endblock %}

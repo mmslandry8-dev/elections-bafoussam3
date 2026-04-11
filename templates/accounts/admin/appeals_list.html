@@ -1,0 +1,31 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<a href="/accounts/users/">
+    <button class="bg-blue-500 px-2 py-1 rounded">← Retour</button>
+</a>
+<br><br>
+<h1 class="text-3xl mb-6">📩 Demandes de réactivation</h1>
+
+{% for appeal in appeals %}
+
+<div class="bg-slate-800 p-4 mb-4 rounded">
+
+    <p><strong>{{ appeal.user.username }}</strong></p>
+    <p>{{ appeal.message }}</p>
+
+    <a href="{% url 'process_appeal' appeal.id %}"
+       class="bg-green-500 px-3 py-1 rounded">
+        ✔️ Approuver
+    </a>
+
+</div>
+
+{% empty %}
+
+<p>Aucune demande en attente</p>
+
+{% endfor %}
+
+{% endblock %}

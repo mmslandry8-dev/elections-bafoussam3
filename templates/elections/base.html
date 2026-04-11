@@ -22,20 +22,27 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="bg-slate-900 p-4 shadow-lg flex justify-between">
-        <h1 class="text-xl font-bold">🗳️ Elections Bafoussam III</h1>
-
-        <div>
-            <a href="/" class="mr-4 hover:text-green-400">Dashboard</a>
-            <a href="/centers/" class="mr-4 hover:text-green-400">Centres</a>
-            <a href="/agent/vote/" class="hover:text-green-400">Saisie</a>
-        </div>
-    </nav>
+{% if request.path != "/accounts/login/" and request.path != "/accounts/register/" %}
+    {% include 'elections/components/navbar.html' %}
+{% endif %}
+    
 
     <!-- CONTENU -->
     <div class="p-6">
         {% block content %}{% endblock %}
     </div>
+
+
+{% if request.path != "/accounts/login/" and request.path != "/accounts/register/" %}  
+<footer class="bg-gray-900 text-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+        
+        <p class="text-sm">
+            © 2026 Plateforme Élections Municipales
+        </p>
+    </div>
+</footer>
+{% endif %} 
 
 </body>
 </html>

@@ -1,0 +1,37 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<div class="flex justify-center items-center h-screen">
+
+    <div class="bg-red-900 text-white p-8 rounded shadow text-center max-w-md">
+
+        <h1 class="text-3xl font-bold mb-4">
+            🚫 Accès refusé
+        </h1>
+
+        <p class="mb-6">
+            Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+        </p>
+
+        <div class="space-x-4">
+
+            <!-- 🔙 retour arrière navigateur -->
+            <button onclick="history.back()"
+                class="bg-white text-red-900 px-4 py-2 rounded hover:bg-gray-200">
+                ⬅ Retour
+            </button>
+
+            <!-- 🏠 retour dashboard -->
+            <a href="{% url 'dashboard' %}"
+               class="bg-green-500 px-4 py-2 rounded hover:bg-green-600">
+                🏠 Accueil
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
