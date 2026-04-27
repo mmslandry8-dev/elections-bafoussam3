@@ -9,43 +9,55 @@
     📍 {{ elector.center.name }} - {{ elector.station.name }}
 </div>
 
-<form method="POST">
+<form method="POST" id="voteForm">
     {% csrf_token %}
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
     {% for party in parties %}
-        <label class="bg-slate-700 p-4 rounded cursor-pointer hover:bg-slate-600 transition block">
+        <label class="block cursor-pointer mb-3">
+            <div class="party-card bg-slate-700 p-4 rounded flex items-center space-x-4 hover:bg-slate-600 transition">
 
-            <!-- input caché -->
-            <input type="radio" name="party" value="{{ party.id }}" class="hidden peer">
+                <!-- RADIO -->
+                <input type="radio" name="party" value="{{ party.id }}" class="hidden">
 
-            <div class="flex items-center space-x-4">
-
+                <!-- LOGO -->
                 {% if party.logo %}
-                    <img src="{{ party.logo.url }}" 
-                         class="w-16 h-16 object-cover rounded bg-white">
-                {% else %}
-                    <div class="w-16 h-16 bg-gray-500 rounded flex items-center justify-center text-xs">
-                        No Logo
-                    </div>
+                    <img src="{{ party.logo.url }}" class="w-16 h-16 object-contain">
                 {% endif %}
 
-                <h3 class="text-white font-bold">
-                    {{ party.name }}
-                </h3>
+                <!-- NOM -->
+                <h3 class="text-white font-bold">{{ party.name }}</h3>
 
             </div>
-
         </label>
     {% endfor %}
 
-    </div>
-
-    <button class="w-full bg-green-500 p-2 rounded mt-6 hover:bg-green-600">
+    <button id="submitBtn" class="w-full bg-green-500 p-2 rounded mt-4">
         Valider mon vote
     </button>
 
 </form>
+
+<script>
+    const cards = document.querySelectorAll('.party-card');
+    const radios = document.querySelectorAll('input[name="party"]');
+
+    cards.forEach((card, index) => {
+        card.addEventListener('click', () => {
+
+            radios[index].checked = true;
+
+            // reset styles
+            cards.forEach(c => c.classList.remove('bg-green-500'));
+
+            // highlight selected
+            card.classList.add('bg-green-500');
+        });
+    });
+
+    // 🔒 anti double clic
+    document.getElementById("voteForm").addEventListener("submit", function() {
+        document.getElementById("submitBtn").disabled = true;
+    });
+</script>
 
 {% endblock %}

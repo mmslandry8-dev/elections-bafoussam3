@@ -1,6 +1,20 @@
 from django.db import models
 from django.conf import settings
 
+from django.utils import timezone
+
+def is_finished(self):
+    if not self.end_time:
+        return False
+    return timezone.now() >= self.end_time
+
+class Meta:
+    constraints = [
+        models.UniqueConstraint(
+            fields=["electoral", "election"],
+            name="unique_vote_per_elector_per_election"
+        )
+    ]
 
 # =========================
 # 🗳️ ELECTION
@@ -9,6 +23,7 @@ class Election(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateField()
     is_active = models.BooleanField(default=False)
+    end_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -69,21 +84,26 @@ class ElectoralList(models.Model):
     station = models.ForeignKey(PollingStation, on_delete=models.CASCADE)
     election = models.ForeignKey(Election, on_delete=models.CASCADE, null=True, blank=True)
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        related_name="electoral_link"
     )
 
     has_voted = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('voter_id', 'election')
+        constraints = [
+            models.UniqueConstraint(
+                fields=["voter_id", "election"],
+                name="unique_voter_per_election"
+            )
+        ]
 
     def __str__(self):
         return f"{self.voter_id} - {self.center.name}"
-
 
 # =========================
 # 🗳️ VOTE EN LIGNE
@@ -126,3 +146,34 @@ class VoteSession(models.Model):
 
     def __str__(self):
         return f"Session - {self.station.name}"
+
+class ElectionConfig(models.Model):
+    is_active = models.BooleanField(default=False)
+    start_time = models.DateTimeField(null=True, blank=True)
+    duration_minutes = models.IntegerField(default=60)
+
+    def is_finished(self):
+        if not self.start_time:
+            return True
+
+        from django.utils import timezone
+        elapsed = (timezone.now() - self.start_time).total_seconds() / 60
+        return elapsed > self.duration_minutes
+    
+from django.utils import timezone
+
+class ElectionState(models.Model):
+    is_active = models.BooleanField(default=False)
+    start_time = models.DateTimeField(null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
+
+    def is_finished(self):
+        if not self.start_time or not self.duration:
+            return True
+        return timezone.now() >= (self.start_time + self.duration)
+
+    def time_remaining(self):
+        if not self.start_time or not self.duration:
+            return 0
+        remaining = (self.start_time + self.duration) - timezone.now()
+        return max(remaining.total_seconds(), 0)

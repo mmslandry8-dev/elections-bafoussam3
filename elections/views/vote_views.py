@@ -1,28 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from elections.models import ElectoralList, Party, Vote
+from elections.models import ElectoralList, Party, Vote, ElectionConfig, ElectionState, Election
 from elections.forms.voter_forms import VoterLookupForm
 from django.contrib.auth.decorators import login_required
-
-# def voter_identification(request):
-
-#     form = VoterLookupForm(request.POST or None)
-
-#     if request.method == "POST" and form.is_valid():
-#         voter_id = form.cleaned_data["voter_id"]
-
-#         try:
-#             voter = ElectoralList.objects.get(voter_id=voter_id)
-
-#             if voter.has_voted:
-#                 return render(request, "elections/vote/already_voted.html")
-
-#             request.session["voter_id"] = voter_id
-#             return redirect("vote_page")
-
-#         except ElectoralList.DoesNotExist:
-#             return render(request, "elections/vote/invalid_voter.html")
-
-#     return render(request, "elections/vote/identify.html", {"form": form})
+from django.utils import timezone
 
 @login_required
 def voter_identification(request):
@@ -60,30 +40,55 @@ def voter_identification(request):
 @login_required
 def vote_page(request):
 
-    # 🔐 récupérer électeur lié
+    # 🔥 1. Récupérer configuration d’élection
+    config = ElectionState.objects.first()
+
+    # 🚫 aucune élection
+    if not config or not config.is_active:
+        return render(request, "elections/vote/closed.html")
+
+    # 🚫 sécurité temps (si end_time existe)
+    if getattr(config, "end_time", None):
+        if config.end_time <= timezone.now():
+            return render(request, "elections/vote/closed.html")
+
+    # 🔐 2. récupérer électeur lié
     try:
         elector = ElectoralList.objects.get(user=request.user)
     except ElectoralList.DoesNotExist:
         return render(request, "core/access_denied.html")
 
-    # 🚫 blocage si déjà voté (physique ou online)
+    # 🚫 déjà voté
     if elector.has_voted:
         return render(request, "elections/vote/already_voted.html")
 
+    # 📌 3. partis disponibles
     parties = Party.objects.all()
 
+    # 🗳️ 4. traitement vote
     if request.method == "POST":
+
         party_id = request.POST.get("party")
+
+        if not party_id:
+            return render(request, "elections/vote/vote_page.html", {
+                "elector": elector,
+                "parties": parties,
+                "error": "Veuillez sélectionner un parti"
+            })
 
         party = get_object_or_404(Party, id=party_id)
 
-        # 🗳️ enregistrer vote
-        Vote.objects.create(
+        # 🔥 anti double vote sécurisé
+        vote, created = Vote.objects.get_or_create(
             electoral=elector,
-            party=party
+            defaults={"party": party}
         )
 
-        # 🔥 marquer comme voté (anti fraude global)
+        if not created:
+            return render(request, "elections/vote/already_voted.html")
+
+        # 🔥 marquer électeur comme ayant voté
         elector.has_voted = True
         elector.save()
 
@@ -120,3 +125,6 @@ def identify_voter(request):
     return render(request, "elections/vote/identify.html", {
         "message": message
     })
+
+def get_active_election():
+    return Election.objects.filter(is_active=True).first()

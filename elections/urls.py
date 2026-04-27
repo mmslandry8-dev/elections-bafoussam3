@@ -14,6 +14,8 @@ from .views.agent_views import agent_electors, mark_voted
 
 from .views.vote_views import vote_page
 
+from .views.admin_views import start_election, reset_election, stop_election
+
 urlpatterns = [
     path("", dashboard, name="dashboard"),
 
@@ -29,5 +31,9 @@ urlpatterns = [
     path("agent/electors/", agent_electors, name="agent_electors"),
     path("agent/electors/<int:elector_id>/vote/", mark_voted, name="mark_voted"),
     
+    path("start-election/", start_election, name="start_election"),
+    path("reset-election/", reset_election, name="reset_election"),
+    path("stop-election/", stop_election, name="stop_election"),
+
     # path("vote/", vote_page, name="vote_page"),
 ]

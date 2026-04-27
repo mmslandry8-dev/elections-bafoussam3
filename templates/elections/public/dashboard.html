@@ -2,9 +2,80 @@
 
 {% block content %}
 
+{% if user.role == "ADMIN" %}
+
+<div class="bg-slate-800 p-4 rounded mt-6">
+
+    <h2 class="text-xl mb-3">⚙️ Gestion de l'élection</h2>
+
+    {% if not is_active %}
+
+        <form method="POST" action="/start-election/">
+            {% csrf_token %}
+            <input type="text" name="duration"
+                   placeholder="hh:mm:ss"
+                   class="text-black p-2 rounded w-full mb-2">
+
+            <button class="bg-green-500 p-2 w-full rounded">
+                Lancer l'élection
+            </button>
+        </form>
+
+    {% else %}
+
+        <a href="/stop-election/">
+            <button class="bg-yellow-500 p-2 w-full rounded">
+                ⛔ Arrêter l'élection
+            </button>
+        </a>
+
+    {% endif %}
+
+    <a href="/reset-election/">
+        <button class="bg-red-500 p-2 w-full rounded mt-3">
+            🔁 Réinitialiser complètement
+        </button>
+    </a>
+
+</div>
+
+{% endif %}
+
 <h1 class="text-4xl font-bold mb-6">
     📊 Résultats en temps réel
 </h1>
+
+<script>
+let time = {{ remaining_time }};
+
+function formatTime(seconds) {
+    let h = Math.floor(seconds / 3600);
+    let m = Math.floor((seconds % 3600) / 60);
+    let s = seconds % 60;
+    return `${h}h ${m}m ${s}s`;
+}
+
+function updateTimer() {
+    if (time <= 0) return;
+    document.getElementById("timer").innerText = formatTime(time);
+    time--;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+
+{% if is_active %}
+    {% if not is_finished %}
+        <div class="bg-blue-500 p-3 rounded mb-4">
+            ⏳ Temps restant : <span id="timer"></span>
+        </div>
+    {% else %}
+        <div class="bg-red-600 p-3 rounded mb-4">
+            ⛔ Élection terminée
+        </div>
+    {% endif %}
+{% endif %}
 
 <div class="bg-red-600 p-3 rounded mb-6">
     ⚠️ Résultats provisoires
@@ -14,21 +85,28 @@
     🗳️ Participation : <strong>{{ participation }}%</strong>
 </div>
 
-{% for name, score, percentage in results %}
+{% for item in results %}
 
-<div class="mb-4 bg-slate-800 p-4 rounded shadow">
+<div class="mb-4 bg-slate-800 p-4 rounded shadow flex items-center justify-between">
 
-    <div class="flex justify-between mb-2">
-        <span class="font-bold">{{ name }}</span>
-        <span>{{ score }} voix ({{ percentage }}%)</span>
+    <div class="flex items-center space-x-4">
+        {% if item.party.logo %}
+            <img src="{{ item.party.logo.url }}" class="w-12 h-12">
+        {% endif %}
+
+        <span class="font-bold">{{ item.party.name }}</span>
     </div>
 
-    <div class="w-full bg-gray-700 h-4 rounded">
-        <div class="bg-green-500 h-4 rounded transition-all duration-500"
-             style="width: {{ percentage }}%;">
-        </div>
+    <div>
+        {{ item.score }} voix ({{ item.percentage }}%)
     </div>
 
+</div>
+
+<div class="w-full bg-gray-700 h-4 rounded mb-4">
+    <div class="bg-green-500 h-4 rounded"
+         style="width: {{ item.percentage }}%;">
+    </div>
 </div>
 
 {% empty %}
