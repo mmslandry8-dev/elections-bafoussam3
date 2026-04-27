@@ -1,40 +1,33 @@
-# from django.urls import path
-# from .views.location_views import centers_list
-
-# from .views.agent_views import create_vote_session
-
-# from .views.public_views import dashboard
-# from .views.public_views import seats_results
-# from .views.agent_views import create_vote_session
-
-# urlpatterns = [
-#     path("centers/", centers_list, name="centers_list"),
-#     path("agent/vote/", create_vote_session, name="create_vote_session"),
-#     path("", dashboard, name="dashboard"),
-#     path("seats/", seats_results, name="seats_results")
-# ]
 from django.urls import path
-from .views.location_views import centers_list, list_list
-from .views.agent_views import create_vote_session
-from .views.public_views import dashboard, seats_results
-from .views.admin_views import admin_dashboard, validate_session
+from .views import *
+from .views.public_views import dashboard
 
-from .views.agent_views import vote_success
+from elections.views.vote_views import voter_identification, vote_page
+
+from elections.views.agent_views import physical_results_view
+
+from .views.admin_views import electoral_list_admin
+
+from .views.admin_views import add_elector
+
+from .views.agent_views import agent_electors, mark_voted
+
+from .views.vote_views import vote_page
 
 urlpatterns = [
     path("", dashboard, name="dashboard"),
 
-    path("seats/", seats_results, name="seats_results"),
+    path("vote/", voter_identification, name="voter_identification"),
+    path("vote/page/", vote_page, name="vote_page"),
 
-    path("centers/", centers_list, name="centers_list"),
+    path("agent/physical-results/", physical_results_view, name="physical_results"),
 
-    path("lists/", list_list, name="list_list"),  # ✅ ajouté
+    path("electors/", electoral_list_admin, name="electoral_list_admin"),
+    
+    path("electors/add/", add_elector, name="add_elector"),
 
-    path("agent/vote/", create_vote_session, name="create_vote_session"),
-
-    path("admin-panel/", admin_dashboard, name="admin_dashboard"),
-    path("validate/<int:session_id>/", validate_session, name="validate_session"),
-
-    path("success/", vote_success, name="vote_success"),
-
+    path("agent/electors/", agent_electors, name="agent_electors"),
+    path("agent/electors/<int:elector_id>/vote/", mark_voted, name="mark_voted"),
+    
+    # path("vote/", vote_page, name="vote_page"),
 ]

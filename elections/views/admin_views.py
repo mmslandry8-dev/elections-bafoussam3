@@ -1,34 +1,45 @@
 from django.shortcuts import render, redirect
-from elections.models import VoteSession, PollingStation
-from elections.services.audit_service import AuditService
+from elections.models import (
+    Election,
+    Commune,
+    Center,
+    PollingStation,
+    Party,
+    ElectoralList,
+    Vote,
+    PhysicalResult
+)
 
-def admin_dashboard(request):
 
-    sessions = VoteSession.objects.all()
+from django.contrib.auth.decorators import login_required
 
-    return render(request, "elections/admin/dashboard.html", {
-        "sessions": sessions
+from elections.forms.electoral_forms import ElectoralListForm
+
+@login_required
+def electoral_list_admin(request):
+
+    if request.user.role != "ADMIN":
+        return render(request, "core/access_denied.html")
+
+    electors = ElectoralList.objects.select_related("center", "station", "user")
+
+    return render(request, "elections/admin/electoral_list.html", {
+        "electors": electors
     })
 
 
-def validate_session(request, session_id):
+@login_required
+def add_elector(request):
 
-    session = VoteSession.objects.get(id=session_id)
+    if request.user.role != "ADMIN":
+        return render(request, "core/access_denied.html")
 
-    station = session.polling_station
+    form = ElectoralListForm(request.POST or None)
 
-    # 🔒 verrouillage
-    station.is_locked = True
-    station.save()
+    if form.is_valid():
+        form.save()
+        return redirect("electoral_list_admin")
 
-    session.is_validated = True
-    session.save()
-
-    # 📝 audit
-    AuditService.log(
-        "VALIDATION",
-        request.user,
-        f"Validation du BV {station.code}"
-    )
-
-    return redirect("admin_dashboard")
+    return render(request, "elections/admin/add_elector.html", {
+        "form": form
+    })

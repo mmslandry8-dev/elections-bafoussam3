@@ -11,6 +11,8 @@
         <th>Rôle</th>
         <th>Statut</th>
         <th>Actions</th>
+        <th>Centre</th>
+        <th>Bureau de vote</th>
     </tr>
 
     {% for user in users %}
@@ -34,11 +36,31 @@
             <!-- 🔄 Changer rôle -->
             <form method="POST" action="{% url 'change_role' user.id %}" class="inline">
                 {% csrf_token %}
+
+                <!-- ROLE -->
                 <select name="role" class="text-black">
+                    <option value="-"></option>
                     <option value="ADMIN">ADMIN</option>
                     <option value="AGENT">AGENT</option>
                     <option value="ELECTEUR">ELECTEUR</option>
                 </select>
+
+                <!-- CENTRE -->
+                <select name="center" class="text-black">
+                    <option value="">-- Centre --</option>
+                    {% for center in centers %}
+                        <option value="{{ center.id }}">{{ center.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- BUREAU -->
+                <select name="station" class="text-black">
+                    <option value="">-- Bureau --</option>
+                    {% for station in stations %}
+                        <option value="{{ station.id }}">{{ station.name }}</option>
+                    {% endfor %}
+                </select>
+
                 <button class="bg-blue-500 px-2 py-1 rounded">OK</button>
             </form>
 
@@ -48,6 +70,13 @@
                 Suspendre
             </a>
 
+        </td>
+        <td>
+            {{ user.center.name|default:"-" }}
+        </td>
+
+        <td>
+            {{ user.polling_station.name|default:"-" }}
         </td>
 
     </tr>

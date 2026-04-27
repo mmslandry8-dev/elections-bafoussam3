@@ -1,0 +1,29 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<div class="flex justify-center items-center h-screen">
+
+    <div class="bg-slate-800 p-8 rounded shadow w-full max-w-md">
+
+        <h2 class="text-2xl mb-6 text-center">
+            ➕ Ajouter un électeur
+        </h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            ID électeur {{ form.voter_id }}
+            Centre {{ form.center }}
+            Bureau {{ form.station }}
+
+            <button class="w-full bg-green-500 p-2 rounded mt-4">
+                Enregistrer
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

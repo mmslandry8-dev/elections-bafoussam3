@@ -5,6 +5,8 @@ from .models import User, Appeal
 
 from django.contrib.auth.decorators import login_required
 
+from elections.models import Center, PollingStation
+
 def register_view(request):
     form = RegisterForm(request.POST or None)
 
@@ -114,26 +116,25 @@ def appeal_view(request):
 
 #     return render(request, 'accounts/appeal.html', {'form': form})
 
-@login_required
 def users_list(request):
-    """
-    Liste des utilisateurs (ADMIN uniquement)
-    """
+
     if request.user.role != "ADMIN":
         return render(request, "core/access_denied.html")
 
     users = User.objects.all()
+    centers = Center.objects.all()
+    stations = PollingStation.objects.all()
 
     return render(request, "accounts/admin/users_list.html", {
-        "users": users
+        "users": users,
+        "centers": centers,
+        "stations": stations
     })
 
 
 @login_required
 def change_role(request, user_id):
-    """
-    Modifier rôle utilisateur
-    """
+
     if request.user.role != "ADMIN":
         return render(request, "core/access_denied.html")
 
@@ -141,7 +142,23 @@ def change_role(request, user_id):
 
     if request.method == "POST":
         new_role = request.POST.get("role")
+        center_id = request.POST.get("center")
+        station_id = request.POST.get("station")
+
         user.role = new_role
+
+        # 🔥 assignation centre
+        if center_id:
+            user.center = Center.objects.get(id=center_id)
+        else:
+            user.center = None
+
+        # 🔥 assignation bureau
+        if station_id:
+            user.polling_station = PollingStation.objects.get(id=station_id)
+        else:
+            user.polling_station = None
+
         user.save()
 
     return redirect("users_list")

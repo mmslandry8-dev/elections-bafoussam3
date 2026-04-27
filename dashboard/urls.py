@@ -9,3 +9,4 @@ urlpatterns = [
     path("validate/<int:session_id>/", validate_session, name="validate_session"),
 
 ]
+

@@ -1,0 +1,51 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl mb-6 text-center">🗳️ Vote en ligne</h1>
+
+<div class="bg-slate-800 p-4 rounded mb-4 text-white">
+    👤 {{ elector.voter_id }} <br>
+    📍 {{ elector.center.name }} - {{ elector.station.name }}
+</div>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    {% for party in parties %}
+        <label class="bg-slate-700 p-4 rounded cursor-pointer hover:bg-slate-600 transition block">
+
+            <!-- input caché -->
+            <input type="radio" name="party" value="{{ party.id }}" class="hidden peer">
+
+            <div class="flex items-center space-x-4">
+
+                {% if party.logo %}
+                    <img src="{{ party.logo.url }}" 
+                         class="w-16 h-16 object-cover rounded bg-white">
+                {% else %}
+                    <div class="w-16 h-16 bg-gray-500 rounded flex items-center justify-center text-xs">
+                        No Logo
+                    </div>
+                {% endif %}
+
+                <h3 class="text-white font-bold">
+                    {{ party.name }}
+                </h3>
+
+            </div>
+
+        </label>
+    {% endfor %}
+
+    </div>
+
+    <button class="w-full bg-green-500 p-2 rounded mt-6 hover:bg-green-600">
+        Valider mon vote
+    </button>
+
+</form>
+
+{% endblock %}

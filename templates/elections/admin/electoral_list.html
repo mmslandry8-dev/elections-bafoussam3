@@ -1,0 +1,54 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<h1 class="text-3xl mb-6">📋 Liste électorale</h1>
+
+<a href="{% url 'add_elector' %}" 
+   class="bg-green-500 px-4 py-2 rounded mb-4 inline-block">
+   ➕ Ajouter un électeur
+</a>
+
+<table class="w-full bg-slate-800 rounded shadow">
+
+    <tr class="bg-slate-700">
+        <th>ID électeur</th>
+        <th>Centre</th>
+        <th>Bureau</th>
+        <th>Utilisateur lié</th>
+        <th>Statut</th>
+    </tr>
+
+    {% for e in electors %}
+
+    <tr class="text-center border-b border-gray-600">
+
+        <td>{{ e.voter_id }}</td>
+
+        <td>{{ e.center.name }}</td>
+
+        <td>{{ e.station.name }}</td>
+
+        <td>
+            {% if e.user %}
+                {{ e.user.username }}
+            {% else %}
+                ❌ Non lié
+            {% endif %}
+        </td>
+
+        <td>
+            {% if e.has_voted %}
+                ✅ A voté
+            {% else %}
+                ❌ Pas encore
+            {% endif %}
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endblock %}

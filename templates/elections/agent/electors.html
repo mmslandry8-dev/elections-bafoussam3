@@ -1,0 +1,51 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<h1 class="text-2xl mb-4">👮 Électeurs du centre</h1>
+
+<form method="GET" class="mb-4">
+    <input type="text" name="q" placeholder="Rechercher..."
+           class="p-2 text-black">
+</form>
+
+<table class="w-full bg-slate-800">
+
+<tr>
+    <th>ID</th>
+    <th>Statut</th>
+    <th>Action</th>
+</tr>
+
+{% for e in electors %}
+
+<tr class="text-center">
+
+    <td>{{ e.voter_id }}</td>
+
+    <td>
+        {% if e.has_voted %}
+            ✅
+        {% else %}
+            ❌
+        {% endif %}
+    </td>
+
+    <td>
+        {% if not e.has_voted %}
+        <a href="{% url 'mark_voted' e.id %}"
+           class="bg-green-500 px-2 py-1 rounded">
+            Valider vote
+        </a>
+        {% else %}
+           A déjà voté
+        {% endif %}
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

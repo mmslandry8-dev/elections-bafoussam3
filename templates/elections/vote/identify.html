@@ -1,0 +1,24 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+
+<h2 class="text-2xl mb-6 text-center">🔐 Identification électeur</h2>
+
+<form method="POST" class="max-w-md mx-auto">
+    {% csrf_token %}
+
+    <input type="text" name="voter_id"
+           placeholder="Entrer votre identifiant"
+           class="w-full p-2 mb-3 text-black">
+
+    <button class="w-full bg-green-500 p-2 rounded">
+        Valider
+    </button>
+
+</form>
+
+{% if message %}
+<p class="text-red-500 text-center mt-4">{{ message }}</p>
+{% endif %}
+
+{% endblock %}

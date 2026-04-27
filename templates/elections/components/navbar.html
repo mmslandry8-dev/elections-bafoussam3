@@ -6,7 +6,7 @@
 
     <div class="space-x-4 text-sm">
 
-        <!-- 🟢 ACCUEIL (TOUS CONNECTÉS) -->
+        <!-- 🟢 ACCUEIL -->
         <a href="/" class="hover:text-green-400">Dashboard</a>
 
         {% if user.is_authenticated %}
@@ -16,12 +16,12 @@
             <!-- ===================== -->
             {% if user.role == "ADMIN" %}
 
-                <a href="/seats/" class="hover:text-green-400">Sièges</a>
-                <a href="/centers/" class="hover:text-green-400">Centres</a>
-                <a href="/agent/vote/" class="hover:text-green-400">Saisie</a>
-                <a href="/admin-panel/" class="hover:text-green-400">Admin</a>
-
                 <a href="/accounts/users/" class="hover:text-yellow-400">Utilisateurs</a>
+                <a href="/accounts/appeals/" class="hover:text-green-400">Appels</a>
+
+                <a href="/electors/" class="hover:text-green-400">Électeurs</a>
+                <a href="/electors/add/" class="hover:text-green-400">Ajouter électeur</a>
+
             {% endif %}
 
             <!-- ===================== -->
@@ -29,9 +29,8 @@
             <!-- ===================== -->
             {% if user.role == "AGENT" %}
 
-                <a href="/agent/vote/" class="hover:text-green-400">Saisie</a>
-                <a href="/centers/" class="hover:text-green-400">Centres</a>
-                <a href="/seats/" class="hover:text-green-400">Sièges</a>
+                <a href="/agent/electors/" class="hover:text-green-400">Électeurs</a>
+                <a href="/agent/physical-results/" class="hover:text-green-400">Résultats</a>
 
             {% endif %}
 
@@ -40,8 +39,7 @@
             <!-- ===================== -->
             {% if user.role == "ELECTEUR" %}
 
-                <a href="/seats/" class="hover:text-green-400">Sièges</a>
-                <a href="/centers/" class="hover:text-green-400">Centres</a>
+                <a href="/vote/" class="hover:text-green-400">Voter</a>
 
             {% endif %}
 
@@ -50,7 +48,7 @@
     </div>
 
     <!-- ===================== -->
-    <!-- 🔐 SESSION BUTTONS -->
+    <!-- 🔐 SESSION -->
     <!-- ===================== -->
 
     {% if user.is_authenticated %}
@@ -62,7 +60,7 @@
         </span>
 
         <a href="/accounts/logout/" 
-           class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition duration-300">
+           class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
            Déconnexion
         </a>
 
@@ -80,7 +78,6 @@
                 Inscription
             </a>
         </div>
-
     {% endif %}
 
 </nav>
